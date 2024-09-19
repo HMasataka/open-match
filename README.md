@@ -19,3 +19,9 @@ kubectl apply --namespace open-match \
 ```bash
 kubectl port-forward --namespace open-match-demo service/om-demo 51507:51507
 ```
+
+### Uninstall Demo
+
+```bash
+kubectl delete namespace open-match-demo
+```
