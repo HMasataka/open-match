@@ -2,8 +2,8 @@
 
 ## Install
 
-[Reference](https://open-match.dev/site/docs/installation/yaml/)
-[demo](https://open-match.dev/site/docs/getting-started/)
+- [Reference](https://open-match.dev/site/docs/installation/yaml/)
+- [demo](https://open-match.dev/site/docs/getting-started/)
 
 ```bash
 kubectl apply --namespace open-match \
