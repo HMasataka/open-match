@@ -20,7 +20,7 @@ const (
 	// The endpoint for the Open Match Backend service.
 	omBackendEndpoint = "open-match-backend.open-match.svc.cluster.local:50505"
 	// The Host and Port for the Match Function service endpoint.
-	functionHostName       = "default-eval-tutorial-matchfunction.default-eval-tutorial.svc.cluster.local"
+	functionHostName       = "open-match-matchfunction.open-match.svc.cluster.local"
 	functionPort     int32 = 50502
 )
 
@@ -124,4 +124,28 @@ func assign(be pb.BackendServiceClient, matches []*pb.Match) error {
 	}
 
 	return nil
+}
+
+// generateProfiles generates test profiles for the matchmaker101 tutorial.
+func generateProfiles() []*pb.MatchProfile {
+	var profiles []*pb.MatchProfile
+	modes := []string{"mode.demo", "mode.ctf", "mode.battleroyale"}
+	for _, mode := range modes {
+		profiles = append(profiles, &pb.MatchProfile{
+			Name: "mode_based_profile",
+			Pools: []*pb.Pool{
+				{
+					Name: "pool_mode_" + mode,
+					TagPresentFilters: []*pb.TagPresentFilter{
+						{
+							Tag: mode,
+						},
+					},
+				},
+			},
+		},
+		)
+	}
+
+	return profiles
 }
