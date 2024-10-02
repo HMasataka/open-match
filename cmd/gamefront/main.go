@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/samber/lo"
 	"google.golang.org/grpc"
 	"open-match.dev/open-match/pkg/pb"
 )
@@ -82,7 +83,7 @@ func enterQueueTime() float64 {
 }
 
 func gameModes() []string {
-	// modes := []string{"mode.demo", "mode.ctf", "mode.battleroyale", "mode.2v2"}
-	// Implement your logic to return any two of the above game-modes randomly
-	return []string{}
+	modes := []string{"mode.demo", "mode.ctf", "mode.battleroyale"}
+
+	return []string{lo.Sample(modes)}
 }
