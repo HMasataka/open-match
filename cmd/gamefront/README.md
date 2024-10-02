@@ -6,4 +6,3 @@
 - リクエストの検証
 - Open Match Frontend にプレイヤーのチケット作成依頼
 - Assignment を取得してクライアントへ返却
-
