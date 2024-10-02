@@ -2,12 +2,12 @@
 .DEFAULT_GOAL := help
 
 build-image: ## build docker image
-	docker build -t ghcr.io/hmasataka/open-match-frontend:latest -f cmd/gamefront/Dockerfile .
+	docker build -t ghcr.io/hmasataka/open-match-gamefront:latest -f cmd/gamefront/Dockerfile .
 	docker build -t ghcr.io/hmasataka/open-match-matchfunction:latest -f cmd/mmf/Dockerfile .
 	docker build -t ghcr.io/hmasataka/open-match-director:latest -f cmd/director/Dockerfile .
 
 push-image: ## push docker image
-	docker push ghcr.io/hmasataka/open-match-frontend:latest
+	docker push ghcr.io/hmasataka/open-match-gamefront:latest
 	docker push ghcr.io/hmasataka/open-match-matchfunction:latest
 	docker push ghcr.io/hmasataka/open-match-director:latest
 
