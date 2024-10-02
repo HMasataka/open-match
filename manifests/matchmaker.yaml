@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: open-match-director
+  namespace: open-match
+spec:
+  containers:
+    - name: open-match-director
+      image: ghcr.io/hmasataka/open-match-director:latest
+      imagePullPolicy: Always
+  hostname: open-match-director
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: open-match-gamefront
+  namespace: open-match
+spec:
+  containers:
+    - name: open-match-gamefront
+      image: ghcr.io/hmasataka/open-match-gamefront:latest
+      imagePullPolicy: Always
+  hostname: open-match-gamefront
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: open-match-matchfunction
+  namespace: open-match
+  labels:
+    app: open-match
+    component: matchfunction
+spec:
+  containers:
+    - name: open-match-matchfunction
+      image: ghcr.io/hmasataka/open-match-matchfunction:latest
+      imagePullPolicy: Always
+      ports:
+        - name: grpc
+          containerPort: 50502
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: open-match-matchfunction
+  namespace: open-match
+  labels:
+    app: open-match
+    component: matchfunction
+spec:
+  selector:
+    app: open-match
+    component: matchfunction
+  clusterIP: None
+  type: ClusterIP
+  ports:
+    - name: grpc
+      protocol: TCP
+      port: 50502
