@@ -27,3 +27,9 @@ kubectl apply -f manifests/matchmaker.yaml
 ```bash
 kubectl delete namespace open-match
 ```
+
+## Dev
+
+```bash
+skaffold dev --port-forward
+```
