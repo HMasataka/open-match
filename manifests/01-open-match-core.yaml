@@ -69,7 +69,7 @@ data:
     # User-supplied common configuration:
     maxclients 100000
     maxmemory 300000000
-    
+
     # End of common configuration
   master.conf: |-
     dir /data
@@ -330,7 +330,7 @@ metadata:
     app.kubernetes.io/instance: open-match
     app.kubernetes.io/managed-by: Helm
   annotations:
-    
+
 spec:
   type: ClusterIP
   clusterIP: None
@@ -425,12 +425,12 @@ spec:
   clusterIP: None
   type: ClusterIP
   ports:
-  - name: grpc
-    protocol: TCP
-    port: 50505
-  - name: http
-    protocol: TCP
-    port: 51505
+    - name: grpc
+      protocol: TCP
+      port: 50505
+    - name: http
+      protocol: TCP
+      port: 51505
 ---
 # Source: open-match/templates/frontend.yaml
 # Copyright 2019 Google LLC
@@ -466,12 +466,12 @@ spec:
   clusterIP: None
   type: ClusterIP
   ports:
-  - name: grpc
-    protocol: TCP
-    port: 50504
-  - name: http
-    protocol: TCP
-    port: 51504
+    - name: grpc
+      protocol: TCP
+      port: 50504
+    - name: http
+      protocol: TCP
+      port: 51504
 ---
 # Source: open-match/templates/query.yaml
 # Copyright 2019 Google LLC
@@ -507,12 +507,12 @@ spec:
   clusterIP: None
   type: ClusterIP
   ports:
-  - name: grpc
-    protocol: TCP
-    port: 50503
-  - name: http
-    protocol: TCP
-    port: 51503
+    - name: grpc
+      protocol: TCP
+      port: 50503
+    - name: http
+      protocol: TCP
+      port: 51503
 ---
 # Source: open-match/templates/swaggerui.yaml
 # Copyright 2019 Google LLC
@@ -546,9 +546,9 @@ spec:
     component: swaggerui
   type: ClusterIP
   ports:
-  - name: http
-    protocol: TCP
-    port: 51500
+    - name: http
+      protocol: TCP
+      port: 51500
 ---
 # Source: open-match/templates/synchronizer.yaml
 # Copyright 2019 Google LLC
@@ -583,12 +583,12 @@ spec:
     release: open-match
   type: ClusterIP
   ports:
-  - name: grpc
-    protocol: TCP
-    port: 50506
-  - name: http
-    protocol: TCP
-    port: 51506
+    - name: grpc
+      protocol: TCP
+      port: 50506
+    - name: http
+      protocol: TCP
+      port: 51506
 ---
 # Source: open-match/templates/backend.yaml
 apiVersion: apps/v1
@@ -615,64 +615,59 @@ spec:
       annotations:
         chart: open-match-1.8.0
         heritage: Helm
-        
+
       labels:
         app: open-match
         component: backend
         release: open-match
     spec:
-      
       volumes:
-        
         - name: om-config-volume-default
           configMap:
             name: open-match-configmap-default
         - name: om-config-volume-override
           configMap:
             name: open-match-configmap-override
-        
-        
+
       serviceAccountName: open-match-unprivileged-service
       containers:
-      - name: open-match-backend
-        volumeMounts:
-          
-          - name: om-config-volume-default
-            mountPath: /app/config/default
-          - name: om-config-volume-override
-            mountPath: /app/config/override
-          
-          
-        image: "gcr.io/open-match-public-images/openmatch-backend:1.8.0"
-        ports:
-        - name: grpc
-          containerPort: 50505
-        - name: http
-          containerPort: 51505
-        imagePullPolicy: Always
-        resources:
-          limits:
-            cpu: 100m
-            memory: 100Mi
-          requests:
-            cpu: 100m
-            memory: 100Mi
-        livenessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /healthz
-            port: 51505
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /healthz?readiness=true
-            port: 51505
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 2
+        - name: open-match-backend
+          volumeMounts:
+            - name: om-config-volume-default
+              mountPath: /app/config/default
+            - name: om-config-volume-override
+              mountPath: /app/config/override
+
+          image: "gcr.io/open-match-public-images/openmatch-backend:1.8.0"
+          ports:
+            - name: grpc
+              containerPort: 50505
+            - name: http
+              containerPort: 51505
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz
+              port: 51505
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz?readiness=true
+              port: 51505
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 2
 ---
 # Source: open-match/templates/frontend.yaml
 apiVersion: apps/v1
@@ -699,64 +694,59 @@ spec:
       annotations:
         chart: open-match-1.8.0
         heritage: Helm
-        
+
       labels:
         app: open-match
         component: frontend
         release: open-match
     spec:
-      
       volumes:
-        
         - name: om-config-volume-default
           configMap:
             name: open-match-configmap-default
         - name: om-config-volume-override
           configMap:
             name: open-match-configmap-override
-        
-        
+
       serviceAccountName: open-match-unprivileged-service
       containers:
-      - name: open-match-frontend
-        volumeMounts:
-          
-          - name: om-config-volume-default
-            mountPath: /app/config/default
-          - name: om-config-volume-override
-            mountPath: /app/config/override
-          
-          
-        image: "gcr.io/open-match-public-images/openmatch-frontend:1.8.0"
-        ports:
-        - name: grpc
-          containerPort: 50504
-        - name: http
-          containerPort: 51504
-        imagePullPolicy: Always
-        resources:
-          limits:
-            cpu: 100m
-            memory: 100Mi
-          requests:
-            cpu: 100m
-            memory: 100Mi
-        livenessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /healthz
-            port: 51504
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /healthz?readiness=true
-            port: 51504
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 2
+        - name: open-match-frontend
+          volumeMounts:
+            - name: om-config-volume-default
+              mountPath: /app/config/default
+            - name: om-config-volume-override
+              mountPath: /app/config/override
+
+          image: "gcr.io/open-match-public-images/openmatch-frontend:1.8.0"
+          ports:
+            - name: grpc
+              containerPort: 50504
+            - name: http
+              containerPort: 51504
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz
+              port: 51504
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz?readiness=true
+              port: 51504
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 2
 ---
 # Source: open-match/templates/query.yaml
 apiVersion: apps/v1
@@ -783,64 +773,59 @@ spec:
       annotations:
         chart: open-match-1.8.0
         heritage: Helm
-        
+
       labels:
         app: open-match
         component: query
         release: open-match
     spec:
-      
       volumes:
-        
         - name: om-config-volume-default
           configMap:
             name: open-match-configmap-default
         - name: om-config-volume-override
           configMap:
             name: open-match-configmap-override
-        
-        
+
       serviceAccountName: open-match-unprivileged-service
       containers:
-      - name: open-match-query
-        volumeMounts:
-          
-          - name: om-config-volume-default
-            mountPath: /app/config/default
-          - name: om-config-volume-override
-            mountPath: /app/config/override
-          
-          
-        image: "gcr.io/open-match-public-images/openmatch-query:1.8.0"
-        ports:
-        - name: grpc
-          containerPort: 50503
-        - name: http
-          containerPort: 51503
-        imagePullPolicy: Always
-        resources:
-          limits:
-            cpu: 100m
-            memory: 100Mi
-          requests:
-            cpu: 100m
-            memory: 100Mi
-        livenessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /healthz
-            port: 51503
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /healthz?readiness=true
-            port: 51503
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 2
+        - name: open-match-query
+          volumeMounts:
+            - name: om-config-volume-default
+              mountPath: /app/config/default
+            - name: om-config-volume-override
+              mountPath: /app/config/override
+
+          image: "gcr.io/open-match-public-images/openmatch-query:1.8.0"
+          ports:
+            - name: grpc
+              containerPort: 50503
+            - name: http
+              containerPort: 51503
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz
+              port: 51503
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz?readiness=true
+              port: 51503
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 2
 ---
 # Source: open-match/templates/swaggerui.yaml
 apiVersion: apps/v1
@@ -872,54 +857,51 @@ spec:
         component: swaggerui
         release: open-match
     spec:
-      
       volumes:
-        
         - name: om-config-volume-default
           configMap:
             name: open-match-configmap-default
         - name: om-config-volume-override
           configMap:
             name: open-match-configmap-override
-        
+
       serviceAccountName: open-match-unprivileged-service
       containers:
-      - name: open-match-swaggerui
-        volumeMounts:
-          
-          - name: om-config-volume-default
-            mountPath: /app/config/default
-          - name: om-config-volume-override
-            mountPath: /app/config/override
-          
-        image: "gcr.io/open-match-public-images/openmatch-swaggerui:1.8.0"
-        ports:
-        - name: http
-          containerPort: 51500
-        imagePullPolicy: Always
-        resources:
-          limits:
-            cpu: 100m
-            memory: 100Mi
-          requests:
-            cpu: 100m
-            memory: 100Mi
-        livenessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /healthz
-            port: 51500
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /healthz?readiness=true
-            port: 51500
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 2
+        - name: open-match-swaggerui
+          volumeMounts:
+            - name: om-config-volume-default
+              mountPath: /app/config/default
+            - name: om-config-volume-override
+              mountPath: /app/config/override
+
+          image: "gcr.io/open-match-public-images/openmatch-swaggerui:1.8.0"
+          ports:
+            - name: http
+              containerPort: 51500
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz
+              port: 51500
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz?readiness=true
+              port: 51500
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 2
 ---
 # Source: open-match/templates/synchronizer.yaml
 apiVersion: apps/v1
@@ -946,64 +928,59 @@ spec:
       annotations:
         chart: open-match-1.8.0
         heritage: Helm
-        
+
       labels:
         app: open-match
         component: synchronizer
         release: open-match
     spec:
-      
       volumes:
-        
         - name: om-config-volume-default
           configMap:
             name: open-match-configmap-default
         - name: om-config-volume-override
           configMap:
             name: open-match-configmap-override
-        
-        
+
       serviceAccountName: open-match-unprivileged-service
       containers:
-      - name: open-match-synchronizer
-        volumeMounts:
-          
-          - name: om-config-volume-default
-            mountPath: /app/config/default
-          - name: om-config-volume-override
-            mountPath: /app/config/override
-          
-          
-        image: "gcr.io/open-match-public-images/openmatch-synchronizer:1.8.0"
-        ports:
-        - name: grpc
-          containerPort: 50506
-        - name: http
-          containerPort: 51506
-        imagePullPolicy: Always
-        resources:
-          limits:
-            cpu: 100m
-            memory: 100Mi
-          requests:
-            cpu: 100m
-            memory: 100Mi
-        livenessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /healthz
-            port: 51506
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /healthz?readiness=true
-            port: 51506
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 2
+        - name: open-match-synchronizer
+          volumeMounts:
+            - name: om-config-volume-default
+              mountPath: /app/config/default
+            - name: om-config-volume-override
+              mountPath: /app/config/override
+
+          image: "gcr.io/open-match-public-images/openmatch-synchronizer:1.8.0"
+          ports:
+            - name: grpc
+              containerPort: 50506
+            - name: http
+              containerPort: 51506
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz
+              port: 51506
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz?readiness=true
+              port: 51506
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 2
 ---
 # Source: open-match/templates/backend.yaml
 apiVersion: autoscaling/v1
@@ -1088,14 +1065,13 @@ spec:
         prometheus.io/port: "9121"
         prometheus.io/scrape: "true"
     spec:
-      
       securityContext:
         fsGroup: 1001
       serviceAccountName: open-match-redis
       automountServiceAccountToken: true
       affinity:
         podAffinity:
-          
+
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
             - podAffinityTerm:
@@ -1107,7 +1083,7 @@ spec:
                 topologyKey: kubernetes.io/hostname
               weight: 1
         nodeAffinity:
-          
+
       terminationGracePeriodSeconds: 30
       containers:
         - name: redis
@@ -1117,7 +1093,7 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - ALL
+                - ALL
             runAsGroup: 0
             runAsNonRoot: true
             runAsUser: 1001
@@ -1190,7 +1166,7 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - ALL
+                - ALL
             runAsGroup: 0
             runAsNonRoot: true
             runAsUser: 1001

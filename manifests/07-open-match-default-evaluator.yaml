@@ -36,12 +36,12 @@ spec:
   clusterIP: None
   type: ClusterIP
   ports:
-  - name: grpc
-    protocol: TCP
-    port: 50508
-  - name: http
-    protocol: TCP
-    port: 51508
+    - name: grpc
+      protocol: TCP
+      port: 50508
+    - name: http
+      protocol: TCP
+      port: 51508
 ---
 # Source: open-match/templates/swaggerui.yaml
 # Copyright 2019 Google LLC
@@ -75,9 +75,9 @@ spec:
     component: swaggerui
   type: ClusterIP
   ports:
-  - name: http
-    protocol: TCP
-    port: 51500
+    - name: http
+      protocol: TCP
+      port: 51500
 ---
 # Source: open-match/charts/open-match-customize/templates/evaluator.yaml
 apiVersion: apps/v1
@@ -99,7 +99,6 @@ spec:
     metadata:
       namespace: open-match
       annotations:
-        
         chart: open-match-customize-0.0.0-dev
         heritage: Helm
       labels:
@@ -107,40 +106,37 @@ spec:
         component: evaluator
         release: open-match
     spec:
-      
       volumes:
-        
         - name: om-config-volume-override
           configMap:
             name: open-match-configmap-override
         - name: om-config-volume-default
           configMap:
             name: open-match-configmap-default
-        
+
       serviceAccountName: open-match-unprivileged-service
       containers:
-      - name: open-match-evaluator
-        volumeMounts:
-          
-          - name: om-config-volume-override
-            mountPath: /app/config/override
-          - name: om-config-volume-default
-            mountPath: /app/config/default
-          
-        image: "gcr.io/open-match-public-images/openmatch-default-evaluator:1.8.0"
-        ports:
-        - name: grpc
-          containerPort: 50508
-        - name: http
-          containerPort: 51508
-        imagePullPolicy: Always
-        resources:
-          limits:
-            cpu: 100m
-            memory: 100Mi
-          requests:
-            cpu: 100m
-            memory: 100Mi
+        - name: open-match-evaluator
+          volumeMounts:
+            - name: om-config-volume-override
+              mountPath: /app/config/override
+            - name: om-config-volume-default
+              mountPath: /app/config/default
+
+          image: "gcr.io/open-match-public-images/openmatch-default-evaluator:1.8.0"
+          ports:
+            - name: grpc
+              containerPort: 50508
+            - name: http
+              containerPort: 51508
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
 ---
 # Source: open-match/templates/swaggerui.yaml
 apiVersion: apps/v1
@@ -172,54 +168,51 @@ spec:
         component: swaggerui
         release: open-match
     spec:
-      
       volumes:
-        
         - name: om-config-volume-default
           configMap:
             name: open-match-configmap-default
         - name: om-config-volume-override
           configMap:
             name: open-match-configmap-override
-        
+
       serviceAccountName: open-match-unprivileged-service
       containers:
-      - name: open-match-swaggerui
-        volumeMounts:
-          
-          - name: om-config-volume-default
-            mountPath: /app/config/default
-          - name: om-config-volume-override
-            mountPath: /app/config/override
-          
-        image: "gcr.io/open-match-public-images/openmatch-swaggerui:1.8.0"
-        ports:
-        - name: http
-          containerPort: 51500
-        imagePullPolicy: Always
-        resources:
-          limits:
-            cpu: 100m
-            memory: 100Mi
-          requests:
-            cpu: 100m
-            memory: 100Mi
-        livenessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /healthz
-            port: 51500
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /healthz?readiness=true
-            port: 51500
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 2
+        - name: open-match-swaggerui
+          volumeMounts:
+            - name: om-config-volume-default
+              mountPath: /app/config/default
+            - name: om-config-volume-override
+              mountPath: /app/config/override
+
+          image: "gcr.io/open-match-public-images/openmatch-swaggerui:1.8.0"
+          ports:
+            - name: http
+              containerPort: 51500
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz
+              port: 51500
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz?readiness=true
+              port: 51500
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 2
 ---
 # Source: open-match/charts/open-match-customize/templates/evaluator.yaml
 apiVersion: autoscaling/v1

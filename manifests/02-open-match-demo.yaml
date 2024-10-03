@@ -37,12 +37,12 @@ spec:
   clusterIP: None
   type: ClusterIP
   ports:
-  - name: grpc
-    protocol: TCP
-    port: 50502
-  - name: http
-    protocol: TCP
-    port: 51502
+    - name: grpc
+      protocol: TCP
+      port: 50502
+    - name: http
+      protocol: TCP
+      port: 51502
 ---
 kind: Service
 apiVersion: v1
@@ -59,9 +59,9 @@ spec:
     component: demo
   type: ClusterIP
   ports:
-  - name: http
-    protocol: TCP
-    port: 51507
+    - name: http
+      protocol: TCP
+      port: 51507
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -87,18 +87,18 @@ spec:
         release: open-match-demo
     spec:
       containers:
-      - name: om-function
-        image: "gcr.io/open-match-public-images/openmatch-mmf-go-soloduel:1.8.0"
-        ports:
-        - name: grpc
-          containerPort: 50502
-        - name: http
-          containerPort: 51502
-        imagePullPolicy: Always
-        resources:
-          requests:
-            memory: 100Mi
-            cpu: 100m
+        - name: om-function
+          image: "gcr.io/open-match-public-images/openmatch-mmf-go-soloduel:1.8.0"
+          ports:
+            - name: grpc
+              containerPort: 50502
+            - name: http
+              containerPort: 51502
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 100m
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -124,25 +124,25 @@ spec:
         release: open-match-demo
     spec:
       containers:
-      - name: om-demo
-        image: "gcr.io/open-match-public-images/openmatch-demo-first-match:1.8.0"
-        imagePullPolicy: Always
-        ports:
-        - name: http
-          containerPort: 51507
-        livenessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /healthz
-            port: 51507
-          initialDelaySeconds: 5
-          periodSeconds: 5
-          failureThreshold: 3
-        readinessProbe:
-          httpGet:
-            scheme: HTTP
-            path: /healthz?readiness=true
-            port: 51507
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 2
+        - name: om-demo
+          image: "gcr.io/open-match-public-images/openmatch-demo-first-match:1.8.0"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 51507
+          livenessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz
+              port: 51507
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              scheme: HTTP
+              path: /healthz?readiness=true
+              port: 51507
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 2
