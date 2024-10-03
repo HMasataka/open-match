@@ -1,0 +1,39 @@
+apiVersion: skaffold/v4beta11
+kind: Config
+build:
+  artifacts:
+    - image: hmasataka/open-match-director
+      ko:
+        main: ./cmd/director
+        dependencies:
+          paths:
+            - "cmd/director/*.go"
+    - image: hmasataka/open-match-gamefront
+      ko:
+        main: ./cmd/gamefront
+        dependencies:
+          paths:
+            - "cmd/gamefront/*.go"
+    - image: hmasataka/open-match-matchfunction
+      ko:
+        main: ./cmd/mmf
+        dependencies:
+          paths:
+            - "cmd/mmf/*.go"
+deploy:
+  kubectl:
+    defaultNamespace: open-match
+manifests:
+  rawYaml:
+    - ./manifests/matchmaker.yaml
+portForward:
+  - resourceType: Service
+    resourceName: open-match-frontend
+    namespace: open-match
+    port: 50504
+    localPort: 50504
+  - resourceType: Service
+    resourceName: open-match-backend
+    namespace: open-match
+    port: 50505
+    localPort: 50505
