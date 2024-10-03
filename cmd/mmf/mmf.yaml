@@ -3,8 +3,30 @@ kind: Pod
 metadata:
   name: open-match-matchfunction
   namespace: open-match
+  labels:
+    app: open-match
+    component: matchfunction
 spec:
   containers:
     - name: open-match-matchfunction
       image: open-match-matchfunction
   hostname: open-match-matchfunction
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: open-match-matchfunction
+  namespace: open-match
+  labels:
+    app: open-match
+    component: matchfunction
+spec:
+  selector:
+    app: open-match
+    component: matchfunction
+  clusterIP: None
+  type: ClusterIP
+  ports:
+    - name: grpc
+      protocol: TCP
+      port: 50502
