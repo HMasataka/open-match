@@ -21,9 +21,7 @@ func main() {
 }
 
 type MatchFunctionService struct {
-	grpc               *grpc.Server
 	queryServiceClient pb.QueryServiceClient
-	port               int
 }
 
 func Start(queryServiceAddr string, serverPort int) {
@@ -38,15 +36,17 @@ func Start(queryServiceAddr string, serverPort int) {
 	}
 
 	server := grpc.NewServer()
+
 	pb.RegisterMatchFunctionServer(server, &mmfService)
+
 	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", serverPort))
 	if err != nil {
 		log.Fatalf("TCP net listener initialization failed for port %v, got %s", serverPort, err.Error())
 	}
 
 	log.Printf("TCP net listener initialized for port %v", serverPort)
-	err = server.Serve(ln)
-	if err != nil {
+
+	if err := server.Serve(ln); err != nil {
 		log.Fatalf("gRPC serve failed, got %s", err.Error())
 	}
 }
@@ -85,10 +85,13 @@ func (s *MatchFunctionService) Run(req *pb.RunRequest, stream pb.MatchFunction_R
 
 func makeMatches(p *pb.MatchProfile, poolTickets map[string][]*pb.Ticket) ([]*pb.Match, error) {
 	var matches []*pb.Match
+
 	count := 0
+
 	for {
 		insufficientTickets := false
 		matchTickets := []*pb.Ticket{}
+
 		for pool, tickets := range poolTickets {
 			if len(tickets) < ticketsPerPoolPerMatch {
 				insufficientTickets = true
