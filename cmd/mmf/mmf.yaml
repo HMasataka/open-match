@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: open-match-matchfunction
+  namespace: open-match
+spec:
+  containers:
+    - name: open-match-matchfunction
+      image: open-match-matchfunction
+  hostname: open-match-matchfunction

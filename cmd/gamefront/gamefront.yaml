@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: open-match-gamefront
+  namespace: open-match
+spec:
+  containers:
+    - name: open-match-gamefront
+      image: open-match-gamefront
+  hostname: open-match-gamefront

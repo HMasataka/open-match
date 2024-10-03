@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: open-match-director
+  namespace: open-match
+spec:
+  containers:
+    - name: open-match-director
+      image: open-match-director
+  hostname: open-match-director
