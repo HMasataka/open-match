@@ -13,34 +13,25 @@ import (
 	"open-match.dev/open-match/pkg/pb"
 )
 
-// The Director in this tutorial continously polls Open Match for the Match
-// Profiles and makes random assignments for the Tickets in the returned matches.
-
 const (
-	// The endpoint for the Open Match Backend service.
-	omBackendEndpoint = "open-match-backend.open-match.svc.cluster.local:50505"
-	// The Host and Port for the Match Function service endpoint.
-	functionHostName       = "open-match-matchfunction.open-match.svc.cluster.local"
-	functionPort     int32 = 50502
+	omBackendEndpoint       = "open-match-backend.open-match.svc.cluster.local:50505"
+	functionHostName        = "open-match-matchfunction.open-match.svc.cluster.local"
+	functionPort      int32 = 50502
 )
 
 func main() {
-	// Connect to Open Match Backend.
 	conn, err := grpc.Dial(omBackendEndpoint, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Failed to connect to Open Match Backend, got %s", err.Error())
 	}
-
 	defer conn.Close()
+
 	be := pb.NewBackendServiceClient(conn)
 
-	// Generate the profiles to fetch matches for.
 	profiles := generateProfiles()
 	log.Printf("Fetching matches for %v profiles", len(profiles))
 
 	for range time.Tick(time.Second * 5) {
-		// Fetch matches for each profile and make random assignments for Tickets in
-		// the matches returned.
 		var wg sync.WaitGroup
 		for _, p := range profiles {
 			wg.Add(1)
